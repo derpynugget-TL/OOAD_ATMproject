@@ -1,4 +1,5 @@
 package com.bankgroup.atm.model;
+import com.bankgroup.atm.exception.InvalidPinException;
 
 /**
  * Owner: Auth & Security (Member 2)
@@ -49,7 +50,13 @@ public class User {
         failedAttempts = 0;
     }
 
-    public void changePin(String oldPin, String newPin) {
+        /**
+     * @throws InvalidPinException if oldPin doesn't match the current PIN.
+     *         (Contract set by Team Lead for the menu loop — implementation
+     *         is still yours: validate oldPin via checkPin(), throw if it
+     *         fails, otherwise update pinHash to newPin.)
+     */
+    public void changePin(String oldPin, String newPin) throws InvalidPinException {
         // TODO(Member 2): validate oldPin via checkPin first, then update pinHash
     }
 }
