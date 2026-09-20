@@ -29,6 +29,17 @@ public class ATM {
         this.bank = bank;
     }
 
+    public void run() {
+        while (true) {
+            User user = authenticate();
+            if (user == null) {
+                System.out.println("Goodbye.");
+                return;
+            }
+            showAuthenticatedMenu(user);
+        }
+    }
+
     public static void main(String[] args) {
         Bank bank = new Bank();
         seedSampleData(bank); // so all 3 of you have consistent test data
@@ -118,7 +129,7 @@ public class ATM {
             System.out.println("7. Exit / Logout");
             System.out.print("Choose an option: ");
             String choice = scanner.nextLine().trim();
-            
+
 
             // Single catch point for every custom exception in this session
             // -> satisfies "no raw stack traces shown to the user" (mandatory
@@ -130,10 +141,11 @@ public class ATM {
                     case "3" : withdraw(user); break;
                     case "4" : transfer(user); break;
                     case "5" : showHistory(user); break;
-                    case "6" : changePin(user); break; 
+                    case "6" : changePin(user); break;
                     case "7" : {
                         sessionActive = false;
                         System.out.println("Logging out...");
+                        break;
                     }
                     default : System.out.println("Invalid option, please choose 1-7.");
                 }

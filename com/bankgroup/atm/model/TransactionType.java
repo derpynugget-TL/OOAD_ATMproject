@@ -13,6 +13,7 @@ public enum TransactionType {
 
     DEPOSIT("Deposit", +1),
     WITHDRAWAL("Withdrawal", -1),
+    INTEREST("Interest", +1),
     TRANSFER_IN("Transfer In", +1),
     TRANSFER_OUT("Transfer Out", -1);
 

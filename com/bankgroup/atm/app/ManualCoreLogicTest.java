@@ -31,6 +31,7 @@ public class ManualCoreLogicTest {
         testBankTransferInsufficientFunds();
         testBankTransferUnknownAccount();
         testBankTransferToSelfRejected();
+        
 
         System.out.println("\n=== Results: " + passCount + " passed, " + failCount + " failed ===");
     }
