@@ -57,15 +57,15 @@ public class ATM {
     private static void seedSampleData(Bank bank) {
         try {
             SavingsAccount savings = new SavingsAccount("SA001", 500.0);
-            bank.addAccount(savings, new User("SA001", hashOf("1234")));
+            bank.addAccount(savings, new User("SA001", "1234"));
 
             CheckingAccount checking = new CheckingAccount("CA001", 200.0);
-            bank.addAccount(checking, new User("CA001", hashOf("5678")));
+            bank.addAccount(checking, new User("CA001","5678"));
 
             // Second savings account so transfers can be tested without
             // crossing account types.
             SavingsAccount savings2 = new SavingsAccount("SA002", 1000.0);
-            bank.addAccount(savings2, new User("SA002", hashOf("4321")));
+            bank.addAccount(savings2, new User("SA002","4321"));
 
             // Pre-populate a little history so "5. Transaction History" is
             // not empty the first time a marker runs the program.
@@ -80,13 +80,7 @@ public class ATM {
         }
     }
 
-    /**
-     * Placeholder hashing hook. Member 2 owns PIN storage — if User already
-     * hashes internally, delete this and pass the raw PIN instead.
-     */
-    private static String hashOf(String pin) {
-        return Integer.toHexString(pin.hashCode());
-    }
+    
 
     /**
      * Loops on the login prompt until either a login succeeds or the user
