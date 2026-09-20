@@ -56,6 +56,7 @@ public class User {
             );
         }
 
+        
         pinHash = hashPin(newPin);
     }
 
