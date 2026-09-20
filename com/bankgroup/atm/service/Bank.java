@@ -41,9 +41,30 @@ public class Bank {
      */
     public User login(String accountNumber, String pin)
             throws AccountNotFoundException, InvalidPinException {
-        // TODO(Member 2): look up user, check locked status, call checkPin,
-        // handle failed-attempt counting / locking here or delegate to User
-        return null;
+        User user = users.get(accountNumber);
+
+        if (user == null) {
+            throw new AccountNotFoundException("Account not found.");
+        }
+
+        if (user.isLocked()) {
+            throw new InvalidPinException("Account is locked.");
+        }
+
+        if (!user.checkPin(pin)) {
+            user.registerFailedAttempt();
+
+            if (user.isLocked()) {
+                throw new InvalidPinException(
+                        "Invalid PIN. Account has been locked after 3 failed attempts.");
+            }
+
+            throw new InvalidPinException("Invalid PIN.");
+        }
+
+        user.resetFailedAttempts();
+        return user;
+
     }
 
     /**
