@@ -118,6 +118,7 @@ public class ATM {
             System.out.println("7. Exit / Logout");
             System.out.print("Choose an option: ");
             String choice = scanner.nextLine().trim();
+            
 
             // Single catch point for every custom exception in this session
             // -> satisfies "no raw stack traces shown to the user" (mandatory
