@@ -9,6 +9,7 @@ import com.bankgroup.atm.model.User;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  * Owner: Shared — mainly You (Team Lead) since this is where everyone's
  * pieces meet. Uses HashMap -> satisfies the "collections" requirement.
@@ -61,7 +62,7 @@ public class Bank {
 
             throw new InvalidPinException("Invalid PIN.");
         }
-        
+
 
         user.resetFailedAttempts();
         return user;
