@@ -37,27 +37,44 @@ public class ATM {
         atm.run();
     }
 
-    /**
-     * Owner: Data & Testing (Member 3) — this is the "sample data" piece
-     * mentioned in the deliverables (README needs sample login credentials).
+        /**
+     * Owner: Data & Testing (Member 3) — sample data for the README's
+     * "test credentials" section. Deliberately covers both account subclasses
+     * and gives each account a small starting history so option 5 has
+     * something to display on a fresh run.
      */
     private static void seedSampleData(Bank bank) {
-        // TODO(Member 3): create a couple of sample accounts/users, e.g.
-        // bank.addAccount(new SavingsAccount("SA001", 500.0), new User("SA001", hashOf("1234")));
-        // bank.addAccount(new CheckingAccount("CA001", 200.0), new User("CA001", hashOf("5678")));
-        // Document these credentials in the README for testing.
+        try {
+            SavingsAccount savings = new SavingsAccount("SA001", 500.0);
+            bank.addAccount(savings, new User("SA001", hashOf("1234")));
+
+            CheckingAccount checking = new CheckingAccount("CA001", 200.0);
+            bank.addAccount(checking, new User("CA001", hashOf("5678")));
+
+            // Second savings account so transfers can be tested without
+            // crossing account types.
+            SavingsAccount savings2 = new SavingsAccount("SA002", 1000.0);
+            bank.addAccount(savings2, new User("SA002", hashOf("4321")));
+
+            // Pre-populate a little history so "5. Transaction History" is
+            // not empty the first time a marker runs the program.
+            savings.deposit(150.0);
+            savings.withdraw(75.50);
+            bank.transfer("SA002", "CA001", 250.0);
+
+        } catch (Exception e) {
+            // Seeding failing should not take the whole ATM down — the app
+            // still runs, just with no sample accounts.
+            System.out.println("Warning: could not seed sample data (" + e.getMessage() + ")");
+        }
     }
 
-        public void run() {
-        System.out.println("=== Welcome to the ATM ===");
-        while (true) {
-            User currentUser = authenticate();
-            if (currentUser == null) {
-                break; // user chose to quit at the login prompt
-            }
-            showAuthenticatedMenu(currentUser);
-        }
-        System.out.println("Goodbye.");
+    /**
+     * Placeholder hashing hook. Member 2 owns PIN storage — if User already
+     * hashes internally, delete this and pass the raw PIN instead.
+     */
+    private static String hashOf(String pin) {
+        return Integer.toHexString(pin.hashCode());
     }
 
     /**
@@ -155,11 +172,18 @@ public class ATM {
     private void showHistory(User user) throws AccountNotFoundException {
         Account account = bank.getAccount(user.getAccountNumber());
         List<Transaction> history = account.getTransactionHistory();
+
         if (history.isEmpty()) {
             System.out.println("No transactions yet.");
-        } else {
-            history.forEach(System.out::println); // TODO(Member 3): nicer formatting via Transaction.toString()
+            return;
         }
+
+        System.out.println();
+        System.out.println(Transaction.HISTORY_HEADER);
+        history.forEach(t -> System.out.println(t.toString()));
+        System.out.println("-".repeat(78));
+        System.out.printf("%d transaction(s). Current balance: %,.2f%n",
+                history.size(), account.getBalance());
     }
 
     private void changePin(User user) throws InvalidPinException {
