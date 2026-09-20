@@ -6,7 +6,10 @@ import com.bankgroup.atm.exception.InvalidPinException;
 import com.bankgroup.atm.model.Account;
 import com.bankgroup.atm.model.User;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -34,6 +37,28 @@ public class Bank {
             throw new AccountNotFoundException("No account found: " + accountNumber);
         }
         return account;
+    }
+
+    /**
+     * Owner: You (Team Lead) — added for Admin Mode (advanced feature).
+     * Unmodifiable snapshot, same reasoning as Account.getTransactionHistory():
+     * admin can view accounts but shouldn't be able to mutate the map directly.
+     */
+    public List<Account> getAllAccounts() {
+        return Collections.unmodifiableList(new ArrayList<>(accounts.values()));
+    }
+
+    /**
+     * Owner: You (Team Lead) — added for Admin Mode, so the "unlock account"
+     * action can call user.unlock() (Auth & Security's method) on the right
+     * User by account number.
+     */
+    public User getUser(String accountNumber) throws AccountNotFoundException {
+        User user = users.get(accountNumber);
+        if (user == null) {
+            throw new AccountNotFoundException("No account found: " + accountNumber);
+        }
+        return user;
     }
 
     /**

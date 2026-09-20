@@ -48,7 +48,7 @@ public class ATM {
         atm.run();
     }
 
-        /**
+    /**
      * Owner: Data & Testing (Member 3) — sample data for the README's
      * "test credentials" section. Deliberately covers both account subclasses
      * and gives each account a small starting history so option 5 has
@@ -60,12 +60,12 @@ public class ATM {
             bank.addAccount(savings, new User("SA001", "1234"));
 
             CheckingAccount checking = new CheckingAccount("CA001", 200.0);
-            bank.addAccount(checking, new User("CA001","5678"));
+            bank.addAccount(checking, new User("CA001", "5678"));
 
             // Second savings account so transfers can be tested without
             // crossing account types.
             SavingsAccount savings2 = new SavingsAccount("SA002", 1000.0);
-            bank.addAccount(savings2, new User("SA002","4321"));
+            bank.addAccount(savings2, new User("SA002", "4321"));
 
             // Pre-populate a little history so "5. Transaction History" is
             // not empty the first time a marker runs the program.
@@ -80,8 +80,6 @@ public class ATM {
         }
     }
 
-    
-
     /**
      * Loops on the login prompt until either a login succeeds or the user
      * types "exit". Relies on Bank.login() (Member 2's implementation) to
@@ -89,17 +87,23 @@ public class ATM {
      */
     private User authenticate() {
         while (true) {
-            System.out.print("Enter account number (or 'exit' to quit): ");
-            String accountNumber = scanner.nextLine().trim();
-            if (accountNumber.equalsIgnoreCase("exit")) {
+            System.out.print("Enter account number (or 'exit' to quit, or 'admin' for admin mode): ");
+            String input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("exit")) {
                 return null;
+            }
+
+            if (input.equalsIgnoreCase("admin")) {
+                handleAdminSession();
+                continue; // back to this same prompt once the admin session ends
             }
 
             System.out.print("Enter PIN: ");
             String pin = scanner.nextLine().trim();
 
             try {
-                return bank.login(accountNumber, pin);
+                return bank.login(input, pin);
             } catch (AccountNotFoundException e) {
                 System.out.println("No account found with that number. Please try again.");
             } catch (InvalidPinException e) {
@@ -108,6 +112,100 @@ public class ATM {
                 System.out.println(e.getMessage());
             }
         }
+    }
+
+    // ===== Admin Mode (advanced feature) =====
+    // Owner: You (Team Lead). Reuses Bank.getAllAccounts()/getUser() (added
+    // above) and User.unlock() (Member 2's method) - no changes needed to
+    // Account, SavingsAccount, CheckingAccount, or User's own logic.
+
+    private static final String ADMIN_PASSWORD = "admin123"; // hardcoded for this simulation
+
+    private boolean authenticateAdmin() {
+        System.out.print("Enter admin password: ");
+        String password = scanner.nextLine().trim();
+        if (password.equals(ADMIN_PASSWORD)) {
+            return true;
+        }
+        System.out.println("Incorrect admin password.");
+        return false;
+    }
+
+    private void handleAdminSession() {
+        if (!authenticateAdmin()) {
+            return;
+        }
+
+        boolean adminActive = true;
+        while (adminActive) {
+            System.out.println("\n--- Admin Menu ---");
+            System.out.println("1. Create New Account");
+            System.out.println("2. View All Accounts");
+            System.out.println("3. Unlock Account");
+            System.out.println("4. Back to Main Menu");
+            System.out.print("Choose an option: ");
+            String choice = scanner.nextLine().trim();
+
+            try {
+                switch (choice) {
+                    case "1" : createAccountAsAdmin(); break;
+                    case "2" : viewAllAccounts(); break;
+                    case "3" : unlockAccountAsAdmin(); break;
+                    case "4" : {
+                        adminActive = false;
+                        System.out.println("Exiting admin mode...");
+                        break;
+                    }
+                    default : System.out.println("Invalid option, please choose 1-4.");
+                }
+            } catch (AccountNotFoundException e) {
+                System.out.println("Error: " + e.getMessage());
+            }
+        }
+    }
+
+    private void createAccountAsAdmin() {
+        System.out.print("New account number: ");
+        String accountNumber = scanner.nextLine().trim();
+
+        System.out.print("Account type (1 = Savings, 2 = Checking): ");
+        String typeChoice = scanner.nextLine().trim();
+
+        double initialBalance = readAmount("Initial balance: ");
+
+        System.out.print("Initial PIN (4 digits): ");
+        String pin = scanner.nextLine().trim();
+
+        Account account = typeChoice.equals("2")
+                ? new CheckingAccount(accountNumber, initialBalance)
+                : new SavingsAccount(accountNumber, initialBalance);
+
+        bank.addAccount(account, new User(accountNumber, pin));
+        System.out.println("Account " + accountNumber + " created successfully.");
+    }
+
+    private void viewAllAccounts() {
+        List<Account> accounts = bank.getAllAccounts();
+        if (accounts.isEmpty()) {
+            System.out.println("No accounts exist yet.");
+            return;
+        }
+
+        System.out.println("\n--- All Accounts ---");
+        for (Account account : accounts) {
+            String type = (account instanceof SavingsAccount) ? "Savings" : "Checking";
+            System.out.printf("%-10s  %-9s  $%,.2f%n",
+                    account.getAccountNumber(), type, account.getBalance());
+        }
+    }
+
+    private void unlockAccountAsAdmin() throws AccountNotFoundException {
+        System.out.print("Account number to unlock: ");
+        String accountNumber = scanner.nextLine().trim();
+
+        User user = bank.getUser(accountNumber);
+        user.unlock(); // Member 2's method
+        System.out.println("Account " + accountNumber + " has been unlocked.");
     }
 
     private void showAuthenticatedMenu(User user) {
