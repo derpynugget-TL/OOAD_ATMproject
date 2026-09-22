@@ -3,18 +3,10 @@ package com.bankgroup.atm.model;
 import com.bankgroup.atm.exception.InsufficientFundsException;
 import java.time.LocalDateTime;
 
-/**
- * Owner: Core Banking Logic (You)
- *
- * Rules to implement:
- *  - Enforces a minimum balance (cannot withdraw below it)
- *  - No overdraft
- *  - applyMonthlyUpdate() adds simulated interest
- */
 public class SavingsAccount extends Account {
 
     private static final double MINIMUM_BALANCE = 50.00;
-    private static final double MONTHLY_INTEREST_RATE = 0.01; // 1%, adjust as needed
+    private static final double MONTHLY_INTEREST_RATE = 0.01;
 
     public SavingsAccount(String accountNumber, double initialBalance) {
         super(accountNumber, initialBalance);

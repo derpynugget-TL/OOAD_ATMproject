@@ -42,18 +42,13 @@ public class ATM {
 
     public static void main(String[] args) {
         Bank bank = new Bank();
-        seedSampleData(bank); // so all 3 of you have consistent test data
+        seedSampleData(bank); 
 
         ATM atm = new ATM(bank);
         atm.run();
     }
 
-    /**
-     * Owner: Data & Testing (Member 3) — sample data for the README's
-     * "test credentials" section. Deliberately covers both account subclasses
-     * and gives each account a small starting history so option 5 has
-     * something to display on a fresh run.
-     */
+
     private static void seedSampleData(Bank bank) {
         try {
             SavingsAccount savings = new SavingsAccount("SA001", 500.0);
@@ -62,29 +57,19 @@ public class ATM {
             CheckingAccount checking = new CheckingAccount("CA001", 200.0);
             bank.addAccount(checking, new User("CA001", "5678"));
 
-            // Second savings account so transfers can be tested without
-            // crossing account types.
             SavingsAccount savings2 = new SavingsAccount("SA002", 1000.0);
             bank.addAccount(savings2, new User("SA002", "4321"));
 
-            // Pre-populate a little history so "5. Transaction History" is
-            // not empty the first time a marker runs the program.
             savings.deposit(150.0);
             savings.withdraw(75.50);
             bank.transfer("SA002", "CA001", 250.0);
 
         } catch (Exception e) {
-            // Seeding failing should not take the whole ATM down — the app
-            // still runs, just with no sample accounts.
             System.out.println("Warning: could not seed sample data (" + e.getMessage() + ")");
         }
     }
 
-    /**
-     * Loops on the login prompt until either a login succeeds or the user
-     * types "exit". Relies on Bank.login() (Member 2's implementation) to
-     * do the real credential/lock checking.
-     */
+   
     private User authenticate() {
         while (true) {
             System.out.print("Enter account number (or 'exit' to quit, or 'admin' for admin mode): ");
@@ -96,7 +81,7 @@ public class ATM {
 
             if (input.equalsIgnoreCase("admin")) {
                 handleAdminSession();
-                continue; // back to this same prompt once the admin session ends
+                continue;
             }
 
             System.out.print("Enter PIN: ");
@@ -107,19 +92,13 @@ public class ATM {
             } catch (AccountNotFoundException e) {
                 System.out.println("No account found with that number. Please try again.");
             } catch (InvalidPinException e) {
-                // Message text (e.g. "incorrect PIN" vs "account locked")
-                // is up to Member 2's exception messages.
+            
                 System.out.println(e.getMessage());
             }
         }
     }
 
-    // ===== Admin Mode (advanced feature) =====
-    // Owner: You (Team Lead). Reuses Bank.getAllAccounts()/getUser() (added
-    // above) and User.unlock() (Member 2's method) - no changes needed to
-    // Account, SavingsAccount, CheckingAccount, or User's own logic.
-
-    private static final String ADMIN_PASSWORD = "admin123"; // hardcoded for this simulation
+    private static final String ADMIN_PASSWORD = "admin123"; 
 
     private boolean authenticateAdmin() {
         System.out.print("Enter admin password: ");
@@ -222,10 +201,6 @@ public class ATM {
             System.out.print("Choose an option: ");
             String choice = scanner.nextLine().trim();
 
-
-            // Single catch point for every custom exception in this session
-            // -> satisfies "no raw stack traces shown to the user" (mandatory
-            // requirement #5) without repeating try-catch in every branch.
             try {
                 switch (choice) {
                     case "1" : checkBalance(user); break;

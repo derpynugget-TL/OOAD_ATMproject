@@ -8,10 +8,7 @@ import com.bankgroup.atm.model.User;
 import com.bankgroup.atm.service.Bank;
 
 /**
- * Owner: You (Core Banking Logic) — quick manual sanity check, NOT the
- * official test suite. Member 3 will replace/extend this with real unit
- * tests (JUnit) once testing tooling is set up. This just answers "does the
- * logic I wrote actually behave correctly?" before handing it off.
+ This just answers "does the logic I wrote actually behave correctly?" before handing it off.
  *
  * Run with: java -cp out com.bankgroup.atm.app.ManualCoreLogicTest
  * (after compiling — see README for the full compile command)
