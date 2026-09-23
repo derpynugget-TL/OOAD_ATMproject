@@ -267,10 +267,6 @@ public class ATM {
         System.out.println("PIN changed successfully.");
     }
 
-    /**
-     * Keeps prompting until the user enters a valid positive number, so a
-     * typo doesn't crash the session or need to be handled by every caller.
-     */
     private double readAmount(String prompt) {
         while (true) {
             System.out.print(prompt);
