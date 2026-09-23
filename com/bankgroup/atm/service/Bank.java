@@ -12,15 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-/**
- * Owner: Shared — mainly You (Team Lead) since this is where everyone's
- * pieces meet. Uses HashMap -> satisfies the "collections" requirement.
- *
- * This is the class the ATM (console controller) will talk to. Keep the
- * method signatures below stable once agreed, since Member 2 and Member 3
- * will both call into this.
- */
 public class Bank {
 
     private final Map<String, Account> accounts = new HashMap<>();
@@ -39,20 +30,10 @@ public class Bank {
         return account;
     }
 
-    /**
-     * Owner: You (Team Lead) — added for Admin Mode (advanced feature).
-     * Unmodifiable snapshot, same reasoning as Account.getTransactionHistory():
-     * admin can view accounts but shouldn't be able to mutate the map directly.
-     */
     public List<Account> getAllAccounts() {
         return Collections.unmodifiableList(new ArrayList<>(accounts.values()));
     }
 
-    /**
-     * Owner: You (Team Lead) — added for Admin Mode, so the "unlock account"
-     * action can call user.unlock() (Auth & Security's method) on the right
-     * User by account number.
-     */
     public User getUser(String accountNumber) throws AccountNotFoundException {
         User user = users.get(accountNumber);
         if (user == null) {
@@ -61,10 +42,6 @@ public class Bank {
         return user;
     }
 
-    /**
-     * Owner: Auth & Security (Member 2) implements the body.
-     * Team Lead just needs this signature to build the ATM login flow against.
-     */
     public User login(String accountNumber, String pin)
             throws AccountNotFoundException, InvalidPinException {
         User user = users.get(accountNumber);
@@ -93,7 +70,6 @@ public class Bank {
         return user;
 
     }
-
 
     public void transfer(String fromAccountNumber, String toAccountNumber, double amount)
             throws AccountNotFoundException, InsufficientFundsException {
