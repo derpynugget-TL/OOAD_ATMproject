@@ -9,17 +9,9 @@ import com.bankgroup.atm.model.SavingsAccount;
 import com.bankgroup.atm.model.Transaction;
 import com.bankgroup.atm.model.User;
 import com.bankgroup.atm.service.Bank;
-
 import java.util.List;
 import java.util.Scanner;
 
-/**
- * Owner: You (Team Lead) — this is the integration point where everyone's
- * pieces get wired together into the console menu loop.
- *
- * Baseline requirement: console-based (Scanner), so keep the interaction
- * here simple and readable.
- */
 public class ATM {
 
     private final Bank bank;
